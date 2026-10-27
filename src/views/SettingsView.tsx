@@ -79,6 +79,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   };
 
   const handlePurgeAll = () => {
+    localStorage.removeItem('srms_hup_projects_v1');
+    localStorage.removeItem('srms_hup_publications_v1');
+    localStorage.removeItem('srms_hup_researchers_v1');
     localStorage.removeItem('srms_projects_v1');
     localStorage.removeItem('srms_publications_v1');
     localStorage.removeItem('srms_researchers_v1');
@@ -97,8 +100,34 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             Cài đặt Hệ thống & Quản trị Dữ liệu
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Quản lý lưu trữ cục bộ, phân quyền mô phỏng, sao lưu dự phòng và thông tin phiên bản
+            Trường Đại học Dược Hà Nội • Quản lý lưu trữ cục bộ, phân quyền mô phỏng và sao lưu
           </p>
+        </div>
+      </div>
+
+      {/* University Identity Card */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-700 to-indigo-800 text-white flex items-center justify-center font-black text-sm tracking-wider shadow-md shrink-0">
+            HUP
+          </div>
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+              BỘ Y TẾ • CƠ SỞ ĐÀO TẠO
+            </div>
+            <h3 className="font-extrabold text-slate-900 text-base sm:text-lg">
+              TRƯỜNG ĐẠI HỌC DƯỢC HÀ NỘI
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              13-15 Lê Thánh Tông, Hoàn Kiếm, Hà Nội • Phòng Quản lý Khoa học Công nghệ & Hợp tác Phát triển
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs self-end sm:self-auto">
+          <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Hệ thống đang hoạt động
+          </span>
         </div>
       </div>
 
@@ -110,7 +139,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           </div>
           <div>
             <h3 className="font-bold text-blue-950 text-sm">
-              Phạm vi phiên bản thử nghiệm (Phase 1)
+              Phạm vi phiên bản thử nghiệm (Trường Đại học Dược Hà Nội)
             </h3>
             <p className="text-xs text-blue-800">
               Công bố rõ ràng về kiến trúc lưu trữ và tính năng phân quyền

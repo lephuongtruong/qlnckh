@@ -59,15 +59,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Brand Header */}
       <div className="p-5 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 font-black text-lg">
-            KH
+          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 font-black text-xs tracking-wider">
+            HUP
           </div>
           <div>
-            <div className="font-extrabold text-white text-sm tracking-wider uppercase">
-              NCKH ĐẠI HỌC
+            <div className="font-extrabold text-white text-xs tracking-wider uppercase">
+              ĐH DƯỢC HÀ NỘI
             </div>
-            <div className="text-[11px] text-blue-400 font-medium flex items-center gap-1">
-              <Building2 className="w-3 h-3" /> Phòng Quản lý KH&CN
+            <div className="text-[10px] text-blue-400 font-medium flex items-center gap-1">
+              <Building2 className="w-3 h-3" /> Phòng QLKH & HTPT
             </div>
           </div>
         </div>
@@ -135,7 +135,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <span>Quy chế NCKH 2025</span>
           </div>
           <p className="text-slate-400 text-[11px] leading-relaxed">
-            Áp dụng định mức giờ NCKH và tiêu chuẩn thưởng bài báo Q1–Q4 theo Quyết định số 248/QĐ-ĐH.
+            Áp dụng định mức giờ NCKH và tiêu chuẩn thưởng bài báo Q1–Q4 theo Quy chế NCKH Trường Đại học Dược Hà Nội.
           </p>
           <div className="mt-2.5 pt-2 border-t border-slate-700/50 flex items-center justify-between text-[10px] text-slate-400">
             <span>Phiên bản thử nghiệm</span>

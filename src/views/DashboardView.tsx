@@ -92,17 +92,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div className="relative z-10 max-w-3xl">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-blue-200 text-xs font-semibold backdrop-blur-xs mb-3">
             <Sparkles className="w-3.5 h-3.5 text-blue-300" />
-            <span>Trung tâm Thông tin Quản lý NCKH</span>
+            <span>Trường Đại học Dược Hà Nội (HUP) • Trung tâm Quản lý NCKH</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Tổng quan Hoạt động Nghiên cứu Khoa học
           </h2>
           <p className="mt-2 text-sm text-blue-100/90 leading-relaxed">
-            Hệ thống theo dõi tiến độ thực hiện đề tài, thống kê công bố quốc tế/trong nước, quản lý định mức kinh phí và hỗ trợ báo cáo theo chuẩn Bộ Giáo dục & Đào tạo.
+            Hệ thống theo dõi tiến độ thực hiện đề tài, thống kê công bố quốc tế/trong nước, quản lý định mức kinh phí và hỗ trợ báo cáo theo chuẩn Bộ Y tế & Bộ Giáo dục và Đào tạo.
           </p>
 
           <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap gap-4 text-xs text-blue-200">
-            <div>Đơn vị: <strong className="text-white">Toàn trường</strong></div>
+            <div>Cơ sở đào tạo: <strong className="text-white">Trường Đại học Dược Hà Nội</strong></div>
             <div>•</div>
             <div>Năm học: <strong className="text-white">2024 - 2025</strong></div>
             <div>•</div>

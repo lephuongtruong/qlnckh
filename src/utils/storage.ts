@@ -3,10 +3,10 @@ import { ResearchProject, Publication, Researcher, UserRole } from '../types';
 import { INITIAL_PROJECTS, INITIAL_PUBLICATIONS, INITIAL_RESEARCHERS, PROJECT_LEVEL_LABELS, PROJECT_STATUS_LABELS } from '../data/mockData';
 
 const STORAGE_KEYS = {
-  PROJECTS: 'srms_projects_v1',
-  PUBLICATIONS: 'srms_publications_v1',
-  RESEARCHERS: 'srms_researchers_v1',
-  ROLE: 'srms_current_role_v1',
+  PROJECTS: 'srms_hup_projects_v1',
+  PUBLICATIONS: 'srms_hup_publications_v1',
+  RESEARCHERS: 'srms_hup_researchers_v1',
+  ROLE: 'srms_hup_current_role_v1',
 };
 
 export const getStoredProjects = (): ResearchProject[] => {
@@ -109,8 +109,8 @@ export const resetAllData = (): { projects: ResearchProject[]; publications: Pub
 export const exportAllDataJSON = (): void => {
   const data = {
     exportDate: new Date().toISOString(),
-    version: '1.0.0',
-    description: 'Bản sao lưu cơ sở dữ liệu NCKH Đại học',
+    version: '1.2.0',
+    description: 'Bản sao lưu cơ sở dữ liệu NCKH - Trường Đại học Dược Hà Nội (HUP)',
     projects: getStoredProjects(),
     publications: getStoredPublications(),
     researchers: getStoredResearchers(),
@@ -119,7 +119,7 @@ export const exportAllDataJSON = (): void => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `NCKH_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `NCKH_DHDuocHN_Backup_${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
 };
@@ -173,7 +173,7 @@ export const formatDate = (dateStr?: string): string => {
 };
 
 // Excel & CSV Exporters
-export const exportProjectsToExcel = (projects: ResearchProject[], filename = 'Danh_sach_de_tai_NCKH.xlsx'): void => {
+export const exportProjectsToExcel = (projects: ResearchProject[], filename = 'Danh_sach_de_tai_NCKH_DHDuocHN.xlsx'): void => {
   const rows = projects.map((p, idx) => ({
     STT: idx + 1,
     'Mã đề tài': p.code,
@@ -191,11 +191,11 @@ export const exportProjectsToExcel = (projects: ResearchProject[], filename = 'D
 
   const worksheet = XLSX.utils.json_to_sheet(rows);
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Đề tài NCKH');
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Đề tài NCKH - ĐH Dược HN');
   XLSX.writeFile(workbook, filename);
 };
 
-export const exportProjectsToCSV = (projects: ResearchProject[], filename = 'Danh_sach_de_tai_NCKH.csv'): void => {
+export const exportProjectsToCSV = (projects: ResearchProject[], filename = 'Danh_sach_de_tai_NCKH_DHDuocHN.csv'): void => {
   const headers = ['STT', 'Mã đề tài', 'Tên đề tài', 'Cấp đề tài', 'Chủ nhiệm', 'Đơn vị', 'Ngày BĐ', 'Ngày KT', 'Kinh phí (VNĐ)', 'Trạng thái', 'Tiến độ (%)'];
   const rows = projects.map((p, idx) => [
     idx + 1,
@@ -221,7 +221,7 @@ export const exportProjectsToCSV = (projects: ResearchProject[], filename = 'Dan
   URL.revokeObjectURL(url);
 };
 
-export const exportPublicationsToExcel = (pubs: Publication[], filename = 'Danh_sach_cong_bo_khoa_hoc.xlsx'): void => {
+export const exportPublicationsToExcel = (pubs: Publication[], filename = 'Danh_sach_cong_bo_khoa_hoc_DHDuocHN.xlsx'): void => {
   const rows = pubs.map((p, idx) => ({
     STT: idx + 1,
     'Tên bài báo / công trình': p.title,
@@ -240,11 +240,11 @@ export const exportPublicationsToExcel = (pubs: Publication[], filename = 'Danh_
 
   const worksheet = XLSX.utils.json_to_sheet(rows);
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Công bố khoa học');
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Công bố KH - ĐH Dược HN');
   XLSX.writeFile(workbook, filename);
 };
 
-export const exportPublicationsToCSV = (pubs: Publication[], filename = 'Danh_sach_cong_bo_khoa_hoc.csv'): void => {
+export const exportPublicationsToCSV = (pubs: Publication[], filename = 'Danh_sach_cong_bo_khoa_hoc_DHDuocHN.csv'): void => {
   const headers = ['STT', 'Tên bài báo', 'Tác giả chính', 'Đơn vị', 'Tạp chí/Hội nghị', 'Năm', 'CSDL', 'Phân hạng', 'DOI', 'Đề tài liên quan'];
   const rows = pubs.map((p, idx) => [
     idx + 1,

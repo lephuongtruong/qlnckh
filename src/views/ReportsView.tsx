@@ -104,6 +104,8 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
     // Sheet 1: Tổng hợp
     const summaryRows = [
+      { 'CHỈ SỐ BÁO CÁO': 'Cơ quan chủ quản', 'GIÁ TRỊ': 'Bộ Y tế' },
+      { 'CHỈ SỐ BÁO CÁO': 'Đơn vị đào tạo', 'GIÁ TRỊ': 'Trường Đại học Dược Hà Nội (HUP)' },
       { 'CHỈ SỐ BÁO CÁO': 'Năm báo cáo', 'GIÁ TRỊ': reportYear === 'all' ? 'Toàn bộ các năm' : reportYear },
       { 'CHỈ SỐ BÁO CÁO': 'Đơn vị lọc', 'GIÁ TRỊ': reportDept === 'all' ? 'Toàn trường' : reportDept },
       { 'CHỈ SỐ BÁO CÁO': 'Cấp đề tài lọc', 'GIÁ TRỊ': reportLevel === 'all' ? 'Tất cả các cấp' : reportLevel },
@@ -260,14 +262,17 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         <div className="border-b-2 border-slate-900 pb-5">
           <div className="flex flex-col sm:flex-row items-start justify-between gap-4 text-xs">
             <div>
-              <div className="font-bold text-slate-800 uppercase tracking-wider text-[11px]">
-                TRƯỜNG ĐẠI HỌC KHOA HỌC & CÔNG NGHỆ
+              <div className="font-bold text-slate-800 uppercase tracking-wider text-[10px]">
+                BỘ Y TẾ
               </div>
-              <div className="font-semibold text-slate-600">
-                PHÒNG QUẢN LÝ KHOA HỌC & CÔNG NGHỆ
+              <div className="font-extrabold text-blue-900 uppercase tracking-wider text-xs">
+                TRƯỜNG ĐẠI HỌC DƯỢC HÀ NỘI
+              </div>
+              <div className="font-semibold text-slate-600 text-[11px]">
+                PHÒNG QUẢN LÝ KHOA HỌC CÔNG NGHỆ & HỢP TÁC PHÁT TRIỂN
               </div>
               <div className="text-slate-400 text-[10px] mt-0.5">
-                Số: ...... /BC-QLKH
+                Số: ...... /BC-DHDKHCN
               </div>
             </div>
 
