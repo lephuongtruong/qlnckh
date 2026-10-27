@@ -1,0 +1,6 @@
+{
+  "name": "Hệ thống Quản lý Nghiên cứu Khoa học Đại học",
+  "description": "Nền tảng quản lý tập trung đề tài nghiên cứu, công bố khoa học, hồ sơ nhà nghiên cứu và theo dõi tiến độ dành cho trường đại học.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
