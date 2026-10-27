@@ -74,6 +74,14 @@ export default function App() {
     });
   };
 
+  const handleBatchSaveProjects = (newProjects: ResearchProject[]) => {
+    setProjects((prev) => {
+      const updated = [...newProjects, ...prev];
+      saveStoredProjects(updated);
+      return updated;
+    });
+  };
+
   const handleDeleteProject = (id: string) => {
     setProjects((prev) => {
       const updated = prev.filter((p) => p.id !== id);
@@ -197,6 +205,7 @@ export default function App() {
               researchers={researchers}
               currentRole={currentRole}
               onSaveProject={handleSaveProject}
+              onBatchSaveProjects={handleBatchSaveProjects}
               onDeleteProject={handleDeleteProject}
               onShowToast={showToast}
               selectedProjectForDetail={selectedProjectForDetail}

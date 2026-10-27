@@ -18,7 +18,8 @@ import {
   Layers, 
   ChevronRight,
   TrendingUp,
-  X
+  X,
+  Upload
 } from 'lucide-react';
 import { ResearchProject, ProjectLevel, ProjectStatus, Researcher, Publication, UserRole } from '../types';
 import { DEPARTMENTS, PROJECT_LEVEL_LABELS, PROJECT_STATUS_LABELS } from '../data/mockData';
@@ -26,6 +27,7 @@ import { formatShortVND, formatVND, formatDate, exportProjectsToExcel, exportPro
 import { ProjectModal } from '../components/ProjectModal';
 import { ProjectDetailModal } from '../components/ProjectDetailModal';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { ImportProjectsModal } from '../components/ImportProjectsModal';
 
 interface ProjectsViewProps {
   projects: ResearchProject[];
@@ -33,6 +35,7 @@ interface ProjectsViewProps {
   researchers: Researcher[];
   currentRole: UserRole;
   onSaveProject: (p: ResearchProject) => void;
+  onBatchSaveProjects?: (projects: ResearchProject[]) => void;
   onDeleteProject: (id: string) => void;
   onShowToast: (msg: string, type?: 'success' | 'info' | 'error') => void;
   selectedProjectForDetail?: ResearchProject | null;
@@ -45,6 +48,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
   researchers,
   currentRole,
   onSaveProject,
+  onBatchSaveProjects,
   onDeleteProject,
   onShowToast,
   selectedProjectForDetail,
@@ -60,6 +64,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
 
   // Modals state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<ResearchProject | null>(null);
   const [viewingProject, setViewingProject] = useState<ResearchProject | null>(selectedProjectForDetail || null);
   const [deletingProject, setDeletingProject] = useState<ResearchProject | null>(null);
@@ -137,6 +142,15 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
     }
   };
 
+  const handleBatchImportConfirm = (importedProjects: ResearchProject[]) => {
+    if (onBatchSaveProjects) {
+      onBatchSaveProjects(importedProjects);
+    } else {
+      importedProjects.forEach((p) => onSaveProject(p));
+    }
+    onShowToast(`Đã nhập thành công ${importedProjects.length} đề tài từ file Excel!`, 'success');
+  };
+
   const handleExportExcel = () => {
     exportProjectsToExcel(filteredProjects);
     onShowToast(`Đã xuất ${filteredProjects.length} đề tài ra file Excel (.xlsx)`, 'success');
@@ -192,6 +206,15 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
               <span>CSV</span>
             </button>
           </div>
+
+          <button
+            onClick={() => setIsImportModalOpen(true)}
+            className="px-3.5 py-2 text-xs sm:text-sm font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
+            title="Nhập danh sách đề tài từ file Excel (.xlsx)"
+          >
+            <Upload className="w-4 h-4 text-emerald-700" />
+            <span>Nhập từ Excel</span>
+          </button>
 
           <button
             onClick={handleAddNew}
@@ -506,6 +529,15 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
         onSave={handleSave}
         projectToEdit={editingProject}
         researchers={researchers}
+        onOpenExcelImport={() => setIsImportModalOpen(true)}
+      />
+
+      <ImportProjectsModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+        onImportConfirm={handleBatchImportConfirm}
+        researchers={researchers}
+        existingCodes={projects.map((p) => p.code)}
       />
 
       <ProjectDetailModal

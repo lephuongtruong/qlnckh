@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Plus, Trash2, Calendar, DollarSign, Award, Building2, User, FileText, CheckCircle2 } from 'lucide-react';
+import { X, Plus, Trash2, Calendar, DollarSign, Award, Building2, User, FileText, CheckCircle2, FileSpreadsheet, Upload } from 'lucide-react';
 import { ResearchProject, ProjectLevel, ProjectStatus, Milestone, Researcher } from '../types';
 import { DEPARTMENTS, PROJECT_LEVEL_LABELS, PROJECT_STATUS_LABELS } from '../data/mockData';
 
@@ -9,6 +9,7 @@ interface ProjectModalProps {
   onSave: (project: ResearchProject) => void;
   projectToEdit?: ResearchProject | null;
   researchers: Researcher[];
+  onOpenExcelImport?: () => void;
 }
 
 export const ProjectModal: React.FC<ProjectModalProps> = ({
@@ -17,6 +18,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
   onSave,
   projectToEdit,
   researchers,
+  onOpenExcelImport,
 }) => {
   const [code, setCode] = useState('');
   const [title, setTitle] = useState('');
@@ -214,6 +216,29 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
 
         {/* Modal Body Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+          {/* Quick Excel Import Invitation */}
+          {!projectToEdit && onOpenExcelImport && (
+            <div className="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5 text-emerald-950 font-medium">
+                <FileSpreadsheet className="w-5 h-5 text-emerald-700 shrink-0" />
+                <span>
+                  Bạn có danh sách nhiều đề tài cần đăng ký? Sử dụng tính năng <strong>Nhập từ file Excel mẫu</strong> để nạp nhanh hàng loạt.
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenExcelImport();
+                }}
+                className="px-3 py-1.5 text-xs font-bold text-emerald-900 bg-white hover:bg-emerald-100 border border-emerald-300 rounded-lg shadow-xs flex items-center gap-1.5 shrink-0 transition-colors self-start sm:self-auto cursor-pointer"
+              >
+                <Upload className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Mở cửa sổ Nhập Excel</span>
+              </button>
+            </div>
+          )}
+
           {/* Section 1: Thông tin cơ bản */}
           <div>
             <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">

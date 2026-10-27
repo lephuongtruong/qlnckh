@@ -268,3 +268,160 @@ export const exportPublicationsToCSV = (pubs: Publication[], filename = 'Danh_sa
   a.click();
   URL.revokeObjectURL(url);
 };
+
+// ==========================================
+// EXCEL IMPORT TEMPLATE & PARSER FOR PROJECTS
+// ==========================================
+
+export const mapLevelStringToKey = (str?: string): import('../types').ProjectLevel => {
+  if (!str) return 'truong';
+  const s = str.toLowerCase();
+  if (s.includes('quốc tế') || s.includes('quoc te')) return 'quoc_te';
+  if (s.includes('quốc gia') || s.includes('quoc gia') || s.includes('nafosted')) return 'quoc_gia';
+  if (s.includes('bộ') || s.includes('bo y te') || s.includes('bo gd')) return 'bo';
+  if (s.includes('tỉnh') || s.includes('tinh') || s.includes('thành phố')) return 'tinh';
+  if (s.includes('sinh viên') || s.includes('sinh vien')) return 'sinh_vien';
+  if (s.includes('trường') || s.includes('truong') || s.includes('cơ sở') || s.includes('co so')) return 'truong';
+  return 'khac';
+};
+
+export const mapStatusStringToKey = (str?: string): import('../types').ProjectStatus => {
+  if (!str) return 'dang_thuc_hien';
+  const s = str.toLowerCase();
+  if (s.includes('đề xuất') || s.includes('de xuat')) return 'de_xuat';
+  if (s.includes('phê duyệt') || s.includes('phe duyet')) return 'duoc_phe_duyet';
+  if (s.includes('đã nghiệm thu') || s.includes('da nghiem thu') || s.includes('hoàn thành')) return 'da_nghiem_thu';
+  if (s.includes('chờ nghiệm thu') || s.includes('cho nghiem thu')) return 'cho_nghiem_thu';
+  if (s.includes('quá hạn') || s.includes('qua han') || s.includes('trễ hạn')) return 'qua_han';
+  return 'dang_thuc_hien';
+};
+
+export const normalizeDateString = (val: any): string => {
+  if (!val) return '';
+  if (val instanceof Date && !isNaN(val.getTime())) {
+    return val.toISOString().slice(0, 10);
+  }
+  if (typeof val === 'number') {
+    // Excel serial date code
+    const date = new Date(Math.round((val - 25569) * 86400 * 1000));
+    if (!isNaN(date.getTime())) {
+      return date.toISOString().slice(0, 10);
+    }
+  }
+  const str = String(val).trim();
+  // Check DD/MM/YYYY
+  const dmyMatch = str.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/);
+  if (dmyMatch) {
+    const day = dmyMatch[1].padStart(2, '0');
+    const month = dmyMatch[2].padStart(2, '0');
+    const year = dmyMatch[3];
+    return `${year}-${month}-${day}`;
+  }
+  // Check YYYY-MM-DD
+  const ymdMatch = str.match(/^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/);
+  if (ymdMatch) {
+    const year = ymdMatch[1];
+    const month = ymdMatch[2].padStart(2, '0');
+    const day = ymdMatch[3].padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  return str;
+};
+
+export const downloadProjectImportTemplate = (): void => {
+  const sampleRows = [
+    {
+      'Mã đề tài (*)': 'DT-BYT-2025-D02',
+      'Tên đề tài (*)': 'Nghiên cứu công nghệ bào chế vi hạt chitosan mang cao chiết Hoàng liên (Coptis chinensis) giải phóng kéo dài',
+      'Cấp đề tài (*)': 'Cấp Bộ (Bộ Y tế / Bộ KH&CN)',
+      'Chủ nhiệm đề tài (*)': 'PGS.TS Trần Hải Đăng',
+      'Đơn vị chủ trì (*)': 'Khoa Bào chế & Công nghệ Dược phẩm',
+      'Thành viên tham gia (phân cách dấu phẩy)': 'TS.DS Lê Thị Mai Lan, DS Nguyễn Văn Hòa',
+      'Ngày bắt đầu (YYYY-MM-DD) (*)': '2025-01-15',
+      'Ngày kết thúc (YYYY-MM-DD) (*)': '2026-12-31',
+      'Kinh phí phê duyệt (VNĐ) (*)': 750000000,
+      'Mục tiêu nghiên cứu (*)': 'Bào chế thành công vi hạt chitosan kích thước < 300 nm, tăng thời gian lưu tại dạ dày và ức chế Helicobacter pylori.',
+      'Nội dung nghiên cứu': 'Tối ưu hóa công thức, kiểm tra hình thái SEM, đánh giá độ tan và độ ổn định bảo quản.',
+      'Sản phẩm dự kiến': '01 bài báo Scopus Q2, 01 quy trình điều chế vi hạt',
+      'Trạng thái (*)': 'Đang thực hiện',
+      'Tiến độ hoàn thành (%)': 35,
+      'Ghi chú': 'Đã hoàn thành thẩm định thuyết minh đợt 1',
+    },
+    {
+      'Mã đề tài (*)': 'DT-CS-2025-HUP05',
+      'Tên đề tài (*)': 'Khảo sát tác dụng hạ lipid máu của cao chiết lá Sen (Nelumbo nucifera) trên chuột nhắt trắng gây béo phì',
+      'Cấp đề tài (*)': 'Cấp Trường ĐH Dược HN',
+      'Chủ nhiệm đề tài (*)': 'TS.BS Vũ Thị Bích Ngọc',
+      'Đơn vị chủ trì (*)': 'Khoa Dược lý - Dược lâm sàng',
+      'Thành viên tham gia (phân cách dấu phẩy)': 'ThS.DS Nguyễn Quốc Tuấn, SV Lê Thị Mai',
+      'Ngày bắt đầu (YYYY-MM-DD) (*)': '2025-03-01',
+      'Ngày kết thúc (YYYY-MM-DD) (*)': '2026-02-28',
+      'Kinh phí phê duyệt (VNĐ) (*)': 80000000,
+      'Mục tiêu nghiên cứu (*)': 'Đánh giá chỉ số cholesterol toàn phần, triglyceride, LDL-C sau 4 tuần dùng cao chiết.',
+      'Nội dung nghiên cứu': 'Gây mô hình béo phì bằng chế độ ăn giàu chất béo HFD, xét nghiệm sinh hóa máu.',
+      'Sản phẩm dự kiến': '01 bài báo Tạp chí Dược học, 01 báo cáo tổng kết',
+      'Trạng thái (*)': 'Được phê duyệt',
+      'Tiến độ hoàn thành (%)': 15,
+      'Ghi chú': 'Kinh phí cấp cơ sở trường đợt 1/2025',
+    },
+    {
+      'Mã đề tài (*)': 'DT-SV-2025-HUP02',
+      'Tên đề tài (*)': 'Xây dựng quy trình định lượng polyphenol toàn phần trong trà hoa vàng bằng phương pháp đo quang phổ UV-Vis',
+      'Cấp đề tài (*)': 'Sinh viên NCKH Dược',
+      'Chủ nhiệm đề tài (*)': 'TS.DS Lê Thị Mai Lan (GV Hướng dẫn)',
+      'Đơn vị chủ trì (*)': 'Khoa Hóa phân tích & Kiểm nghiệm thuốc',
+      'Thành viên tham gia (phân cách dấu phẩy)': 'SV Nguyễn Đức Minh (Trưởng nhóm), SV Phạm Thanh Thảo',
+      'Ngày bắt đầu (YYYY-MM-DD) (*)': '2025-04-01',
+      'Ngày kết thúc (YYYY-MM-DD) (*)': '2025-11-30',
+      'Kinh phí phê duyệt (VNĐ) (*)': 25000000,
+      'Mục tiêu nghiên cứu (*)': 'Thẩm định quy trình theo hướng dẫn ICH Q2(R1) đạt độ lặp lại RSD < 2%.',
+      'Nội dung nghiên cứu': 'Khảo sát thuốc thử Folin-Ciocalteu, độ tuyến tính và độ thu hồi.',
+      'Sản phẩm dự kiến': '01 báo cáo nghiệm thu đề tài sinh viên NCKH',
+      'Trạng thái (*)': 'Đề xuất',
+      'Tiến độ hoàn thành (%)': 0,
+      'Ghi chú': 'Tham gia giải thưởng Sinh viên Nghiên cứu Khoa học HUP',
+    },
+  ];
+
+  const instructions = [
+    { 'HƯỚNG DẪN NHẬP LIỆU': 'CƠ QUAN CHỦ QUẢN', 'CHI TIẾT QUY ĐỊNH': 'Bộ Y tế - Trường Đại học Dược Hà Nội (HUP)' },
+    { 'HƯỚNG DẪN NHẬP LIỆU': 'Cột có dấu (*)', 'CHI TIẾT QUY ĐỊNH': 'Bắt buộc phải điền đầy đủ dữ liệu (Mã đề tài, Tên đề tài, Cấp, Chủ nhiệm, Đơn vị, Ngày BĐ, Ngày KT, Kinh phí, Mục tiêu, Trạng thái)' },
+    { 'HƯỚNG DẪN NHẬP LIỆU': 'Định dạng Ngày', 'CHI TIẾT QUY ĐỊNH': 'YYYY-MM-DD (Ví dụ: 2025-01-15) hoặc DD/MM/YYYY (Ví dụ: 15/01/2025)' },
+    { 'HƯỚNG DẪN NHẬP LIỆU': 'Định dạng Kinh phí', 'CHI TIẾT QUY ĐỊNH': 'Nhập số nguyên dương tính bằng VNĐ (Ví dụ: 500000000 hoặc 75000000)' },
+    { 'HƯỚNG DẪN NHẬP LIỆU': 'Cấp đề tài hợp lệ', 'CHI TIẾT QUY ĐỊNH': 'Cấp Quốc tế, Cấp Quốc gia (NAFOSTED), Cấp Bộ (Bộ Y tế / Bộ KH&CN), Cấp Tỉnh / Thành phố, Cấp Trường ĐH Dược HN, Sinh viên NCKH Dược, Cấp khác' },
+    { 'HƯỚNG DẪN NHẬP LIỆU': 'Trạng thái hợp lệ', 'CHI TIẾT QUY ĐỊNH': 'Đề xuất, Được phê duyệt, Đang thực hiện, Chờ nghiệm thu, Đã nghiệm thu, Quá hạn' },
+    { 'HƯỚNG DẪN NHẬP LIỆU': 'Đơn vị chủ trì hợp lệ', 'CHI TIẾT QUY ĐỊNH': 'Khoa Bào chế & Công nghệ Dược phẩm, Khoa Dược lý - Dược lâm sàng, Khoa Hóa phân tích & Kiểm nghiệm thuốc, Khoa Dược liệu & Y học cổ truyền, Khoa Hóa dược, Viện Công nghệ Dược phẩm Quốc gia, Khoa Quản lý & Kinh tế Dược, Trung tâm DI & ADR Quốc gia' },
+    { 'HƯỚNG DẪN NHẬP LIỆU': 'Lưu ý khi nhập', 'CHI TIẾT QUY ĐỊNH': 'Không sửa đổi tên các tiêu đề cột ở dòng 1. Xóa các dòng mẫu trước khi điền dữ liệu thực tế của bạn hoặc để nguyên dòng mẫu để thử nghiệm.' },
+  ];
+
+  const wb = XLSX.utils.book_new();
+
+  // Sheet 1: Mẫu nhập liệu
+  const wsData = XLSX.utils.json_to_sheet(sampleRows);
+  // Set column widths
+  wsData['!cols'] = [
+    { wch: 22 }, // Mã
+    { wch: 45 }, // Tên
+    { wch: 26 }, // Cấp
+    { wch: 28 }, // Chủ nhiệm
+    { wch: 32 }, // Đơn vị
+    { wch: 35 }, // Thành viên
+    { wch: 18 }, // Ngày BĐ
+    { wch: 18 }, // Ngày KT
+    { wch: 22 }, // Kinh phí
+    { wch: 45 }, // Mục tiêu
+    { wch: 35 }, // Nội dung
+    { wch: 30 }, // Sản phẩm
+    { wch: 18 }, // Trạng thái
+    { wch: 22 }, // Tiến độ %
+    { wch: 30 }, // Ghi chú
+  ];
+  XLSX.utils.book_append_sheet(wb, wsData, 'Danh_Sach_De_Tai_Mau');
+
+  // Sheet 2: Hướng dẫn
+  const wsInstructions = XLSX.utils.json_to_sheet(instructions);
+  wsInstructions['!cols'] = [{ wch: 28 }, { wch: 80 }];
+  XLSX.utils.book_append_sheet(wb, wsInstructions, 'Huong_Dan_Nhap_Lieu');
+
+  XLSX.writeFile(wb, 'Mau_Nhap_De_Tai_NCKH_DHDuocHN.xlsx');
+};
